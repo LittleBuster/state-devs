@@ -13,6 +13,7 @@
 #define __LOG_H__
 
 #include <stdbool.h>
+#include "devlist.h"
 
 enum {
 	LOG_ERROR,
@@ -31,28 +32,26 @@ enum {
 bool log_set_path(const char *path);
 
 /**
- * Setting path for sync operations lof file
+ * Setting path for state operations of device
  * 
  * returrns true: if setted
  * returns false: if path size to long
  */
-bool log_set_sync_path(const char *path);
+bool log_set_state_path(const char *path);
 
 /**
  * Writing message to local log file
  * @message: writing message
  * @log_type: type of log message
- *
- * returns true: if message writed
- * returns false: if message writing error
  */
-bool log_local(const char *message, unsigned log_type);
+void log_local(const char *message, unsigned log_type);
 
 /**
  * Writting message to local sync log file
- * @message: log message
+ * @dev: device structure pointer
+ * @state: state of device
  */
-void log_sync(const char *message, const char *filename);
+void log_state(struct device *restrict dev, bool state);
 
 
 #endif

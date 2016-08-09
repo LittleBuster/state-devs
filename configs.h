@@ -18,13 +18,11 @@
 
 enum error_codes {
     CFG_FILE_NOT_FOUND,
-    CFG_CC_INTERVAL_ERR,
-    CFG_SC_IP_ERR,
-    CFG_SC_PORT_ERR,
-    CFG_DC_ID_ERR,
-    CFG_DC_KEY_ERR,
-    CFG_SS_IN_ERR,
-    CFG_SS_OUT_ERR,
+    CFG_STATE_INTERVAL_ERR,
+    CFG_DB_IP_ERR,
+    CFG_DB_USER_ERR,
+    CFG_DB_PASSWD_ERR,
+    CFG_DB_BASE_ERR,
     CFG_OK
 };
 
@@ -38,47 +36,27 @@ enum error_codes {
 uint8_t configs_load(const char *filename);
 
 
-struct checker_cfg {
+struct state_cfg {
 	unsigned interval;	
 };
 
 /*
- * Checker timer configs
+ * State timer configs
  */
-struct checker_cfg *configs_get_checker(void);
+struct state_cfg *configs_get_state(void);
 
 
-struct server_cfg {
-	char ip[25];
-	unsigned port;
+struct db_cfg {
+	char ip[16];
+    char user[255];
+    char passwd[255];
+    char base[255];
 };
 
 /*
- * Remote tcp server configs
+ * Database configs
  */
-struct server_cfg *configs_get_server(void);
-
-
-struct device_cfg {
-	unsigned id;
-	char key[65];
-};
-
-/*
- * Device configs
- */
-struct device_cfg *configs_get_device(void);
-
-
-struct sensors_cfg {
-	unsigned dht_in;
-	unsigned dht_out;
-};
-
-/*
- * Sensors configs
- */
-struct sensors_cfg *configs_get_sensors(void);
+struct db_cfg *configs_get_db(void);
 
 
 #endif

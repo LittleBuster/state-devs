@@ -22,10 +22,8 @@ enum {
 };
 
 static struct {
-    struct checker_cfg cc;
-    struct server_cfg sc;
-    struct device_cfg dc;
-    struct sensors_cfg ss;
+    struct state_cfg state;
+    struct db_cfg dbc;
 } cfg;
 
 
@@ -147,54 +145,36 @@ uint8_t configs_load(const char *filename)
     if (file == NULL)
         return CFG_FILE_NOT_FOUND;
 
-    if (!configs_read_unsigned(file, &cfg.cc.interval)) {
+    if (!configs_read_unsigned(file, &cfg.state.interval)) {
         fclose(file);
-        return CFG_CC_INTERVAL_ERR;
+        return CFG_STATE_INTERVAL_ERR;
     }
-    if (!configs_read_string(file, cfg.sc.ip, 15)) {
+    if (!configs_read_string(file, cfg.dbc.ip, 15)) {
         fclose(file);
-        return CFG_SC_IP_ERR;
+        return CFG_DB_IP_ERR;
     }
-    if (!configs_read_unsigned(file, &cfg.sc.port)) {
+    if (!configs_read_string(file, cfg.dbc.user, 254)) {
         fclose(file);
-        return CFG_SC_PORT_ERR;
+        return CFG_DB_USER_ERR;
     }
-    if (!configs_read_unsigned(file, &cfg.dc.id)) {
+    if (!configs_read_string(file, cfg.dbc.passwd, 254)) {
         fclose(file);
-        return CFG_DC_ID_ERR;
+        return CFG_DB_PASSWD_ERR;
     }
-    if (!configs_read_string(file, cfg.dc.key, 64)) {
+    if (!configs_read_string(file, cfg.dbc.base, 255)) {
         fclose(file);
-        return CFG_DC_KEY_ERR;
-    }
-    if (!configs_read_unsigned(file, &cfg.ss.dht_in)) {
-        fclose(file);
-        return CFG_SS_IN_ERR;
-    }
-    if (!configs_read_unsigned(file, &cfg.ss.dht_out)) {
-        fclose(file);
-        return CFG_SS_OUT_ERR;
+        return CFG_DB_BASE_ERR;
     }
     fclose(file);
     return CFG_OK;
 }
 
-struct checker_cfg *configs_get_checker(void)
+struct state_cfg *configs_get_state(void)
 {
-    return &cfg.cc;
+    return &cfg.state;
 }
 
-struct server_cfg *configs_get_server(void)
+struct db_cfg *configs_get_db(void)
 {
-    return &cfg.sc;
-}
-
-struct device_cfg *configs_get_device(void)
-{
-    return &cfg.dc;
-}
-
-struct sensors_cfg *configs_get_sensors(void)
-{
-    return &cfg.ss;
+    return &cfg.dbc;
 }

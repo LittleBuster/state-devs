@@ -18,7 +18,7 @@
 
 static struct {
 	char path[PATH_SZIE];
-	char sync_path[PATH_SZIE];
+	char state_path[PATH_SZIE];
 } log;
 
 
@@ -30,15 +30,15 @@ bool log_set_path(const char *path)
 	return true;
 }
 
-bool log_set_sync_path(const char *path)
+bool log_set_state_path(const char *path)
 {
 	if (strlen(path) >= PATH_SZIE)
 		return false;
-	strncpy(log.sync_path, path, PATH_SZIE);
+	strncpy(log.state_path, path, PATH_SZIE);
 	return true;	
 }
 
-bool log_local(const char *message, unsigned log_type)
+void log_local(const char *message, unsigned log_type)
 {
 	FILE *file;
 	char out_msg[255];
@@ -73,19 +73,18 @@ bool log_local(const char *message, unsigned log_type)
 
 	file = fopen(log.path, "a");
 	if (file == NULL)
-		return false;
+		return;
 	if (!fputs(out_msg, file)) {
 		fclose(file);
-		return false;
+		return;
 	}
 	fclose(file);
-	return true;
 }
 
-void log_sync(const char *message, const char *filename)
+void log_state(struct device *restrict dev, bool state)
 {
 	FILE *file;
-	char out_msg[255];
+	char out_msg[1024];
 	char date[DATE_SIZE];
 	char time[TIME_SIZE];	
 
@@ -96,15 +95,18 @@ void log_sync(const char *message, const char *filename)
 	strcat(out_msg, date);
 	strcat(out_msg, "][");
 	strcat(out_msg, time);
-	strcat(out_msg, "] ");
-	strcat(out_msg, message);
-	if (filename != NULL) {
-		strcat(out_msg, " ");
-		strcat(out_msg, filename);
-	}
+	strcat(out_msg, "][");
+	strcat(out_msg, dev->type);
+	strcat(out_msg, "][");
+	strcat(out_msg, dev->name);
+	strcat(out_msg, "] Devise is ");
+	if (state)
+		strcat(out_msg, "UP.");
+	else
+		strcat(out_msg, "DOWN.");
 	puts(out_msg);
 
-	file = fopen(log.sync_path, "a");
+	file = fopen(log.state_path, "a");
 	if (file == NULL)
 		return;
 
