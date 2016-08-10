@@ -12,8 +12,10 @@
 #ifndef __STATE_H__
 #define __STATE_H__
 
+#include <stdbool.h>
 
 
+bool state_run(void);
 
 
 #endif

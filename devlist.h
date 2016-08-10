@@ -30,14 +30,14 @@ struct device {
 
 
 struct dev_list {
-    struct device *device;		/* device */
+    struct device *device;	/* device */
     struct dev_list *next; 	/* next device */
 };
 
 /**
  * Add new device in list
  * @list: devices list struct
- * @dev: user's data
+ * @dev: device
  *
  * returns device list with added device
  */
