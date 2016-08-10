@@ -23,7 +23,7 @@ bool database_connect(struct database *db, const char *ip, const char *user, con
 	return true;
 }
 
-struct dev_list *database_get_dev_list(struct database *db)
+struct dev_list *database_get_devices(struct database *db)
 {
 	return NULL;
 }

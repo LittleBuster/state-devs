@@ -1,12 +1,12 @@
 CC=gcc
 CFLAGS=-Wall -I. -std=gnu99 -pedantic -march=native -O2 -Wno-pointer-arith -Wno-address
-LDFLAGS=-lmysqlclient
+LDFLAGS=-lmysqlclient -lcurl
 
 
 all: sdevs
 
-sdevs: main.o tcpclient.o configs.o utils.o log.o state.o devlist.o database.o
-	$(CC) main.o tcpclient.o configs.o utils.o log.o state.o devlist.o database.o -o sdevs $(CFLAGS) $(LDFLAGS)
+sdevs: main.o tcpclient.o configs.o utils.o log.o state.o devlist.o database.o telegram.o
+	$(CC) main.o tcpclient.o configs.o utils.o log.o state.o devlist.o database.o telegram.o -o sdevs $(CFLAGS) $(LDFLAGS)
 
 main.o: main.c
 	$(CC) -c main.c $(CFLAGS)
@@ -31,6 +31,9 @@ devlist.o: devlist.c
 
 database.o: database.c
 	$(CC) -c database.c $(CFLAGS)
+
+telegram.o: telegram.c
+	$(CC) -c telegram.c $(CFLAGS)
 
 
 install:

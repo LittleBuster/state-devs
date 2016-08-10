@@ -42,7 +42,7 @@ bool database_connect(struct database *db, const char *ip, const char *user, con
  * returns devices list
  * returns NULL: if error reading base
  */
-struct dev_list *database_get_dev_list(struct database *db);
+struct dev_list *database_get_devices(struct database *db);
 
 /**
  * Update device info in base
