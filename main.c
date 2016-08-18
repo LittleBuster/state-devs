@@ -10,9 +10,29 @@
  */
 
 #include <stdio.h>
+#include <string.h>
+#include "log.h"
+#include "configs.h"
+#include "state.h"
 
 
 int main(void)
 {
+	if (!log_set_path("/var/log/sdevs.log")) {
+		puts("Log path is to long!");
+		return -1;
+	}
+	if (!log_set_state_path("/var/log/state.log")) {
+		log_local("Log state path is to long!", LOG_ERROR);
+		return -1;
+	}
+	if (configs_load("/etc/sdevs.conf") != CFG_OK) {
+		log_local("Fail loading configs.", LOG_ERROR);
+		return -1;	
+	}
+	if (!state_run()) {
+		log_local("Fail starting state checker.", LOG_ERROR);
+		return -1;
+	}
 	return 0;
 }

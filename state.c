@@ -48,8 +48,22 @@ static void state_handle(void)
 		struct device *dev = dev_list_get_device(l);
 
 		if (!tcp_client_connect(&st_devs.client, dev->ip, dev->port)) {
-			// Send telegram message
+			if (dev->status != 0) {
+				dev->status = 0;
+				if (!database_update_device(&st_devs.db, dev))
+					log_local("Can not update device.", LOG_ERROR);
+				//send telegram
+				log_state(dev, false);
+			}
 			continue;
+		}
+		if (dev->status != 1) {
+			dev->status = 1;
+			if (!database_update_device(&st_devs.db, dev))
+				log_local("Can not update device.", LOG_ERROR);
+			//send telegram
+			log_state(dev, true);
+			
 		}
 		//Check status. If changed send telegram message
 		tcp_client_close(&st_devs.client);
@@ -66,6 +80,7 @@ bool state_run(void)
 {
 	struct state_cfg *state = (struct state_cfg *)configs_get_state();
 
+        state_handle();
     for (;;) {
         struct timeval tv = {state->interval, 0};
         if (select(0, NULL, NULL, NULL, &tv) == -1)

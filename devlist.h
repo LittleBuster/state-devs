@@ -24,8 +24,7 @@ struct device {
 	unsigned port;					/* TCP port of device */
 	char down_time[DATETIME_SIZE];	/* Last down time of device */
 	char up_time[DATETIME_SIZE];	/* Last up time of device */
-	bool status;					/* Device life status */
-	bool alarm;						/* Send alarm status */
+	unsigned status;					/* Device life status */
 };
 
 
