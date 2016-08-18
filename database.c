@@ -70,6 +70,11 @@ char num[255];
     strcpy(sql, "UPDATE devices SET status=");
     sprintf(num, "%u", upd_dev->status);
     strcat(sql, num);
+    strcat(sql, ", down=\"");
+    strcat(sql, upd_dev->down_time);
+    strcat(sql, "\", up=\"");
+    strcat(sql, upd_dev->up_time);
+    strcat(sql, "\"");
 
     ret_val = mysql_query(db->base, sql);
     if (ret_val != 0)
