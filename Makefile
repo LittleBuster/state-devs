@@ -38,12 +38,12 @@ telegram.o: telegram.c
 
 install:
 	mkdir /usr/share/state-devs
-	cp sdevs.cfg /etc/
+	cp sdevs.conf /etc/
 	cp sdevs /usr/share/state-devs/
 
 remove:
 	rm -rf /usr/share/state-devs/
-	rm /etc/sdevs.cfg
+	rm /etc/sdevs.conf
 
 clean:
 	-rm sdevs

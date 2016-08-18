@@ -41,7 +41,7 @@ void date_time_now(char *date_time)
     struct tm *timeinfo;
 
     timeinfo = localtime (&t);
-    strftime(date_str, TIME_SIZE, "%F", timeinfo);
+    strftime(date_str, DATE_SIZE, "%F", timeinfo);
     strftime(time_str, TIME_SIZE, "%T", timeinfo);
 
     strcpy(date_time, date_str);

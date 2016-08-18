@@ -49,7 +49,11 @@ static void state_handle(void)
 
 		if (!tcp_client_connect(&st_devs.client, dev->ip, dev->port)) {
 			if (dev->status != 0) {
+				char dt[DATETIME_SIZE];
+
+				date_time_now(dt);
 				dev->status = 0;
+				strncpy(dev->down_time, dt, DATETIME_SIZE);
 				if (!database_update_device(&st_devs.db, dev))
 					log_local("Can not update device.", LOG_ERROR);
 				//send telegram
@@ -58,6 +62,10 @@ static void state_handle(void)
 			continue;
 		}
 		if (dev->status != 1) {
+			char dt[DATETIME_SIZE];
+
+			date_time_now(dt);
+			strncpy(dev->up_time, dt, DATETIME_SIZE);
 			dev->status = 1;
 			if (!database_update_device(&st_devs.db, dev))
 				log_local("Can not update device.", LOG_ERROR);
