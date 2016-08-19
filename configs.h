@@ -28,7 +28,7 @@ enum error_codes {
 
 /**
  * Loading configs from file to RAM
- * @filename: name of json configs file
+ * @filename: name of configs file
  *
  * returns error codes: if fail loading
  * returns CFG_OK: if succefful loading

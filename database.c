@@ -77,7 +77,7 @@ char num[255];
     strcat(sql, "\" WHERE ip=\"");
     strcat(sql, upd_dev->ip);
     strcat(sql, "\"");
-
+puts(sql);
     ret_val = mysql_query(db->base, sql);
     if (ret_val != 0)
         return false;
