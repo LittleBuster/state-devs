@@ -101,7 +101,7 @@ void log_state(struct device *restrict dev, bool state)
 	strcat(out_msg, dev->type);
 	strcat(out_msg, "][");
 	strcat(out_msg, dev->name);
-	strcat(out_msg, "] Devise: ");
+	strcat(out_msg, "] Device: ");
 	strcat(out_msg, dev->ip);
 	strcat(out_msg, " port: ");
 	strcat(out_msg, num);
