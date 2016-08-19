@@ -33,7 +33,7 @@ struct database {
  * returns false: if fail connection
  * returns true: if connection ok
  */
-bool database_connect(struct database *db, const char *ip, const char *user, const char *passwd, const char *base);
+bool database_connect(struct database *restrict db, const char *ip, const char *user, const char *passwd, const char *base);
 
 /**
  * Getting devices list from base
@@ -42,7 +42,7 @@ bool database_connect(struct database *db, const char *ip, const char *user, con
  * returns devices list
  * returns NULL: if error reading base
  */
-struct dev_list *database_get_devices(struct database *db);
+struct dev_list *database_get_devices(struct database *restrict db);
 
 /**
  * Update device info in base
@@ -52,12 +52,12 @@ struct dev_list *database_get_devices(struct database *db);
  * returns false: if fail updating
  * returns true: if ok
  */
-bool database_update_device(struct database *db, struct device *upd_dev);
+bool database_update_device(struct database *restrict db, struct device *restrict upd_dev);
 
 /*
  * Closing connection
  */
-void database_close(struct database *db);
+void database_close(struct database *restrict db);
 
 
 #endif

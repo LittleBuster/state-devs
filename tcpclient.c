@@ -33,39 +33,6 @@ bool tcp_client_connect(struct tcp_client *restrict sock, const char *ip, const 
     return true;
 }
 
-bool tcp_client_send(struct tcp_client *restrict sock, const void *data, const size_t len)
-{
-    int ret_val = 0;
-
-    for (;;) {
-        ret_val = send(sock->s, data, len, MSG_NOSIGNAL);
-        if (ret_val == SOCKET_ERROR)
-            return false;
-
-        if (ret_val == (int)len)
-            break;
-    }
-    return true;
-}
-
-bool tcp_client_recv(struct tcp_client *restrict sock, void *data, size_t len)
-{
-    size_t bytes;
-
-    while (len) {
-        bytes = recv(sock->s, data, len, MSG_NOSIGNAL|MSG_WAITALL);
-        if (bytes == len)
-            break;
-
-        if ((bytes == 0) || (bytes == SOCKET_ERROR))
-            return false;
-
-        data += bytes;
-        len -= bytes;
-    }
-    return true;
-}
-
 void tcp_client_close(struct tcp_client *restrict sock)
 {
     if (sock->s != INVALID_SOCKET) {

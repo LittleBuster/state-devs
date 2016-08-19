@@ -43,28 +43,6 @@ struct tcp_client {
  */
 bool tcp_client_connect(struct tcp_client *restrict sock, const char *ip, const unsigned port);
 
-/**
- * Send data to other socket
- * @socket: socket struct
- * @data: sending data
- * @len: size of sendign data
- *
- * Returns true if succeful sending
- * Returns false if fail sending
- */
-bool tcp_client_send(struct tcp_client *restrict sock, const void *data, const size_t len);
-
-/**
- * Receive data from other socket
- * @socket: socket struct
- * @data: sending data
- * @len: size of receiving data
- *
- * Returns true if succeful receiving
- * Returns false if fail receiving
- */
-bool tcp_client_recv(struct tcp_client *restrict sock, void *data, size_t len);
-
 /*
  * Close connection
  */

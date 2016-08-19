@@ -13,7 +13,7 @@
 #include <string.h>
 
 
-bool database_connect(struct database *db, const char *ip, const char *user, const char *passwd, const char *base)
+bool database_connect(struct database *restrict db, const char *ip, const char *user, const char *passwd, const char *base)
 {
 	db->base = mysql_init(NULL);
 
@@ -24,7 +24,7 @@ bool database_connect(struct database *db, const char *ip, const char *user, con
 	return true;
 }
 
-struct dev_list *database_get_devices(struct database *db)
+struct dev_list *database_get_devices(struct database *restrict db)
 {
     int ret_val;
     size_t count;
@@ -61,7 +61,7 @@ struct dev_list *database_get_devices(struct database *db)
     return dlist;
 }
 
-bool database_update_device(struct database *db, struct device *upd_dev)
+bool database_update_device(struct database *restrict db, struct device *restrict upd_dev)
 {
     int ret_val;
     char sql[255];
@@ -77,14 +77,14 @@ char num[255];
     strcat(sql, "\" WHERE ip=\"");
     strcat(sql, upd_dev->ip);
     strcat(sql, "\"");
-puts(sql);
+
     ret_val = mysql_query(db->base, sql);
     if (ret_val != 0)
         return false;
 	return true;
 }
 
-void database_close(struct database *db)
+void database_close(struct database *restrict db)
 {
 	mysql_close(db->base);
 }
