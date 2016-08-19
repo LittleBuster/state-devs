@@ -86,8 +86,10 @@ void log_state(struct device *restrict dev, bool state)
 	FILE *file;
 	char out_msg[1024];
 	char date[DATE_SIZE];
-	char time[TIME_SIZE];	
+	char time[TIME_SIZE];
+	char num[255];
 
+	sprintf(num, "%u", dev->port);
 	date_now(date);
 	time_now(time);
 
@@ -99,7 +101,11 @@ void log_state(struct device *restrict dev, bool state)
 	strcat(out_msg, dev->type);
 	strcat(out_msg, "][");
 	strcat(out_msg, dev->name);
-	strcat(out_msg, "] Devise is ");
+	strcat(out_msg, "] Devise: ");
+	strcat(out_msg, dev->ip);
+	strcat(out_msg, " port: ");
+	strcat(out_msg, num);
+	strcat(out_msg, " is ");
 	if (state)
 		strcat(out_msg, "UP.");
 	else

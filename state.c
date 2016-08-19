@@ -47,7 +47,9 @@ static void state_handle(void)
 	for (struct dev_list *l = dlist; l != NULL; l = dev_list_next(l)) {
 		struct device *dev = dev_list_get_device(l);
 
+		printf("Trying to connect to: %s port: %u ... ", dev->ip, dev->port);
 		if (!tcp_client_connect(&st_devs.client, dev->ip, dev->port)) {
+			puts("[FAIL]");
 			if (dev->status != 0) {
 				char dt[DATETIME_SIZE];
 
@@ -61,6 +63,7 @@ static void state_handle(void)
 			}
 			continue;
 		}
+		puts("[OK]");
 		if (dev->status != 1) {
 			char dt[DATETIME_SIZE];
 
@@ -81,6 +84,7 @@ static void state_handle(void)
 	 */
 	dev_list_free_all(dlist);
 	database_close(&st_devs.db);
+	puts("============================================================");
 }
 
 

@@ -74,6 +74,8 @@ char num[255];
     strcat(sql, upd_dev->down_time);
     strcat(sql, "\", up=\"");
     strcat(sql, upd_dev->up_time);
+    strcat(sql, "\" WHERE ip=\"");
+    strcat(sql, upd_dev->ip);
     strcat(sql, "\"");
 
     ret_val = mysql_query(db->base, sql);
