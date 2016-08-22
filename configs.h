@@ -23,6 +23,8 @@ enum error_codes {
     CFG_DB_USER_ERR,
     CFG_DB_PASSWD_ERR,
     CFG_DB_BASE_ERR,
+    CFG_TG_ID_ERR,
+    CFG_TG_KEY_ERR,
     CFG_OK
 };
 
@@ -57,6 +59,16 @@ struct db_cfg {
  * Database configs
  */
 struct db_cfg *configs_get_db(void);
+
+struct tg_cfg {
+	unsigned id;
+	char key[255];
+};
+
+/*
+ * Telegram configs
+*/
+struct tg_cfg *configs_get_tg(void);
 
 
 #endif

@@ -13,6 +13,7 @@
 #include "configs.h"
 #include "devlist.h"
 #include "tcpclient.h"
+#include "telegram.h"
 #include "database.h"
 #include "log.h"
 #include <stdio.h>
@@ -30,6 +31,7 @@ static void state_handle(void)
 {
 	struct dev_list *dlist;
 	struct db_cfg *dbc = (struct db_cfg *)configs_get_db();
+	struct tg_cfg *tg = (struct tg_cfg *)configs_get_tg();
 
 	if (!database_connect(&st_devs.db, dbc->ip, dbc->user, dbc->passwd, dbc->base)) {
 		log_local("Can not connect to database.", LOG_ERROR);
@@ -52,19 +54,28 @@ static void state_handle(void)
 			puts("[FAIL]");
 			if (dev->status != 0) {
 				char dt[DATETIME_SIZE];
+				char tg_msg[1024];
 
 				date_time_now(dt);
 				dev->status = 0;
 				strncpy(dev->down_time, dt, DATETIME_SIZE);
 				if (!database_update_device(&st_devs.db, dev))
 					log_local("Can not update device.", LOG_ERROR);
-				//send telegram
+				strcpy(tg_msg, "New%20Issue%0ADevice:%20");
+				strcat(tg_msg, dev->name);
+				strcat(tg_msg, "%0AIP:%20");
+				strcat(tg_msg, dev->ip);
+				strcat(tg_msg, "%0ADate:%20");
+				strcat(tg_msg, dev->down_time);
+				strcat(tg_msg, "%0AIssue:%20Device%20is%20DOWN.");
+				telegram_send(tg->key, tg->id, tg_msg);
 				log_state(dev, false);
 			}
 			continue;
 		}
 		puts("[OK]");
 		if (dev->status != 1) {
+			char tg_msg[1024];
 			char dt[DATETIME_SIZE];
 
 			date_time_now(dt);
@@ -72,9 +83,17 @@ static void state_handle(void)
 			dev->status = 1;
 			if (!database_update_device(&st_devs.db, dev))
 				log_local("Can not update device.", LOG_ERROR);
-			//send telegram
 			log_state(dev, true);
 			
+			strcpy(tg_msg, "New%20Issue%0ADevice:%20");
+			strcat(tg_msg, dev->name);
+			strcat(tg_msg, "%0AIP:%20");
+			strcat(tg_msg, dev->ip);
+			strcat(tg_msg, "%0ADate:%20");
+			strcat(tg_msg, dev->up_time);
+			strcat(tg_msg, "%0AIssue:%20Device%20is%20UP.");
+			telegram_send(tg->key, tg->id, tg_msg);
+			log_state(dev, false);	
 		}
 		//Check status. If changed send telegram message
 		tcp_client_close(&st_devs.client);

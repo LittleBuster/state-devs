@@ -24,6 +24,7 @@ enum {
 static struct {
     struct state_cfg state;
     struct db_cfg dbc;
+    struct tg_cfg tg;
 } cfg;
 
 
@@ -156,9 +157,17 @@ uint8_t configs_load(const char *filename)
         fclose(file);
         return CFG_DB_PASSWD_ERR;
     }
-    if (!configs_read_string(file, cfg.dbc.base, 255)) {
+    if (!configs_read_string(file, cfg.dbc.base, 254)) {
         fclose(file);
         return CFG_DB_BASE_ERR;
+    }
+    if (!configs_read_unsigned(file, &cfg.tg.id)) {
+        fclose(file);
+        return CFG_TG_ID_ERR;
+    }
+    if (!configs_read_string(file, cfg.tg.key, 254)) {
+        fclose(file);
+        return CFG_TG_KEY_ERR;
     }
     fclose(file);
     return CFG_OK;
@@ -172,4 +181,9 @@ struct state_cfg *configs_get_state(void)
 struct db_cfg *configs_get_db(void)
 {
     return &cfg.dbc;
+}
+
+struct tg_cfg *configs_get_tg(void)
+{
+	return &cfg.tg;
 }
