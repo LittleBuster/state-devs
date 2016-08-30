@@ -20,8 +20,7 @@
 struct device {
 	char ip[16];					/* IP of device */
 	char name[255];					/* Name of device */
-	char type[255];					/* Type of device: office, production, etc. */
-	unsigned port;					/* TCP port of device */
+	char type[255];					/* TCP port of device */
 	char down_time[DATETIME_SIZE];	/* Last down time of device */
 	char up_time[DATETIME_SIZE];	/* Last up time of device */
 	unsigned status;					/* Device life status */

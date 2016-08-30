@@ -9,10 +9,10 @@
  * of the Licence, or (at your option) any later version.
  */
 
+#define _GNU_SOURCE
 #include "state.h"
 #include "configs.h"
 #include "devlist.h"
-#include "tcpclient.h"
 #include "telegram.h"
 #include "database.h"
 #include "log.h"
@@ -22,10 +22,27 @@
 
 
 static struct {
-	struct tcp_client client;
 	struct database db;
 } st_devs;
 
+
+static int ping(char *ipaddr)
+{
+	char *command = NULL;
+	FILE *fp;
+	int stat = 0;
+	if (!asprintf (&command, "%s %s -q 2>&1", "fping", ipaddr))
+		return -1;
+	fp = popen(command, "r");
+	if (fp == NULL) {
+		fprintf(stderr, "Failed to execute fping command\n");
+		free(command);
+		return -1;
+	}
+	stat = pclose(fp);
+	free(command);
+	return WEXITSTATUS(stat);
+}
 
 static void state_handle(void)
 {
@@ -49,8 +66,8 @@ static void state_handle(void)
 	for (struct dev_list *l = dlist; l != NULL; l = dev_list_next(l)) {
 		struct device *dev = dev_list_get_device(l);
 
-		printf("Trying to connect to: %s port: %u ... ", dev->ip, dev->port);
-		if (!tcp_client_connect(&st_devs.client, dev->ip, dev->port)) {
+		printf("Trying to connect to: %s ... ", dev->ip);
+		if (!ping(dev->ip)) {
 			puts("[FAIL]");
 			if (dev->status != 0) {
 				char dt[DATETIME_SIZE];
@@ -95,8 +112,6 @@ static void state_handle(void)
 			telegram_send(tg->key, tg->id, tg_msg);
 			log_state(dev, false);	
 		}
-		//Check status. If changed send telegram message
-		tcp_client_close(&st_devs.client);
 	}
 	/*
 	 * End.

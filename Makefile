@@ -5,17 +5,14 @@ LDFLAGS=-lmysqlclient -lcurl
 
 all: sdevs
 
-sdevs: main.o tcpclient.o configs.o utils.o log.o state.o devlist.o database.o telegram.o
-	$(CC) main.o tcpclient.o configs.o utils.o log.o state.o devlist.o database.o telegram.o -o sdevs $(CFLAGS) $(LDFLAGS)
+sdevs: main.o configs.o utils.o log.o state.o devlist.o database.o telegram.o
+	$(CC) main.o configs.o utils.o log.o state.o devlist.o database.o telegram.o -o sdevs $(CFLAGS) $(LDFLAGS)
 
 main.o: main.c
 	$(CC) -c main.c $(CFLAGS)
 
 configs.o: configs.c
 	$(CC) -c configs.c $(CFLAGS) $(LDFLAGS)
-
-tcpclient.o: tcpclient.c
-	$(CC) -c tcpclient.c $(CFLAGS)
 
 log.o: log.c
 	$(CC) -c log.c $(CFLAGS)
