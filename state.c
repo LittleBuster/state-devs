@@ -19,6 +19,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <errno.h>
+#include <stdlib.h>
 
 
 static struct {
@@ -41,7 +42,7 @@ static int ping(char *ipaddr)
 	}
 	stat = pclose(fp);
 	free(command);
-	return WEXITSTATUS(stat);
+	return stat;
 }
 
 static void state_handle(void)
