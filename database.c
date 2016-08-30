@@ -50,9 +50,9 @@ struct dev_list *database_get_devices(struct database *restrict db)
         strncpy(dev->ip, row[1], 15);
         strncpy(dev->name, row[2], 254);
         strncpy(dev->type, row[3], 254);
-	    strncpy(dev->down_time, row[5], DATETIME_SIZE);
-	    strncpy(dev->up_time, row[6], DATETIME_SIZE);
-	    sscanf(row[7], "%u", &dev->status);
+            strncpy(dev->down_time, row[4], DATETIME_SIZE);
+            strncpy(dev->up_time, row[5], DATETIME_SIZE);
+            sscanf(row[6], "%u", &dev->status);
 
         dlist = dev_list_append(dlist, dev);
     }
