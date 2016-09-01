@@ -29,8 +29,8 @@ bool telegram_send(const char *key, unsigned chat_id, const char *message)
     strcat(url, num);
     strcat(url, "&text=");
     strcat(url, message);
-
-    curl_handle = curl_easy_init();
+    
+	curl_handle = curl_easy_init();
     if (curl_handle) {
         curl_easy_setopt(curl_handle, CURLOPT_URL, url);
         curl_easy_perform(curl_handle);

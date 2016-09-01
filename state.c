@@ -42,7 +42,6 @@ static int ping(char *ipaddr)
 	}
 	stat = pclose(fp);
 	free(command);
-	printf("RETURN: %d\n", stat);
 	return stat;
 }
 
@@ -69,7 +68,7 @@ static void state_handle(void)
 		struct device *dev = dev_list_get_device(l);
 
 		printf("Trying to connect to: %s ... ", dev->ip);
-		if (!ping(dev->ip)) {
+		if (ping(dev->ip) != 0) {
 			puts("[FAIL]");
 			if (dev->status != 0) {
 				char dt[DATETIME_SIZE];
@@ -87,7 +86,8 @@ static void state_handle(void)
 				strcat(tg_msg, "%0ADate:%20");
 				strcat(tg_msg, dev->down_time);
 				strcat(tg_msg, "%0AIssue:%20Device%20is%20DOWN.");
-				telegram_send(tg->key, tg->id, tg_msg);
+				if (!telegram_send(tg->key, tg->id, tg_msg))
+					log_local("Can not send telegram message", LOG_ERROR);
 				log_state(dev, false);
 			}
 			continue;
@@ -102,7 +102,6 @@ static void state_handle(void)
 			dev->status = 1;
 			if (!database_update_device(&st_devs.db, dev))
 				log_local("Can not update device.", LOG_ERROR);
-			log_state(dev, true);
 			
 			strcpy(tg_msg, "New%20Issue%0ADevice:%20");
 			strcat(tg_msg, dev->name);
@@ -111,8 +110,9 @@ static void state_handle(void)
 			strcat(tg_msg, "%0ADate:%20");
 			strcat(tg_msg, dev->up_time);
 			strcat(tg_msg, "%0AIssue:%20Device%20is%20UP.");
-			telegram_send(tg->key, tg->id, tg_msg);
-			log_state(dev, false);	
+			if (!telegram_send(tg->key, tg->id, tg_msg))
+				log_local("Can not send telegram message", LOG_ERROR);
+			log_state(dev, true);	
 		}
 	}
 	/*
