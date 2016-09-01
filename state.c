@@ -42,6 +42,7 @@ static int ping(char *ipaddr)
 	}
 	stat = pclose(fp);
 	free(command);
+	printf("RETURN: %d\n", stat);
 	return stat;
 }
 
