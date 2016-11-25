@@ -64,7 +64,7 @@ bool database_update_device(struct database *restrict db, struct device *restric
 {
     int ret_val;
     char sql[255];
-char num[255];
+    char num[255];
 
     strcpy(sql, "UPDATE devices SET status=");
     sprintf(num, "%u", upd_dev->status);
@@ -81,6 +81,31 @@ char num[255];
     if (ret_val != 0)
         return false;
 	return true;
+}
+
+bool database_add_device_info(struct database *restrict db, struct device *restrict dev, const char *time)
+{
+    int ret_val;
+    char sql[255];
+    char num[255];
+
+    strcpy(sql, "INSERT INTO info(name,ip,type,time,status) VALUES (\"");
+    strcat(sql, dev->name);
+    strcat(sql, "\", \"");
+    strcat(sql, dev->ip);
+    strcat(sql, "\", \"");
+    strcat(sql, dev->type);
+    strcat(sql, "\", \"");
+    strcat(sql, time);
+    strcat(sql, "\", ");
+    sprintf(num, "%u", dev->status);
+    strcat(sql, num);
+    strcat(sql, ")");
+
+    ret_val = mysql_query(db->base, sql);
+    if (ret_val != 0)
+        return false;
+    return true;
 }
 
 void database_close(struct database *restrict db)

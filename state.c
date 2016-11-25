@@ -77,8 +77,12 @@ static void state_handle(void)
 				date_time_now(dt);
 				dev->status = 0;
 				strncpy(dev->down_time, dt, DATETIME_SIZE);
+
 				if (!database_update_device(&st_devs.db, dev))
 					log_local("Can not update device.", LOG_ERROR);
+				if (!database_add_device_info(&st_devs.db, dev, dev->down_time))
+					log_local("Can not add info of device.", LOG_ERROR);
+
 				strcpy(tg_msg, "New%20Issue%0ADevice:%20");
 				strcat(tg_msg, dev->name);
 				strcat(tg_msg, "%0AIP:%20");
@@ -88,7 +92,7 @@ static void state_handle(void)
 				strcat(tg_msg, "%0AIssue:%20Device%20is%20DOWN.");
 				if (!telegram_send(tg->key, tg->id, tg_msg))
 					log_local("Can not send telegram message", LOG_ERROR);
-				log_state(dev, false);
+				log_state(dev, false);				
 			}
 			continue;
 		}
@@ -100,8 +104,11 @@ static void state_handle(void)
 			date_time_now(dt);
 			strncpy(dev->up_time, dt, DATETIME_SIZE);
 			dev->status = 1;
+
 			if (!database_update_device(&st_devs.db, dev))
 				log_local("Can not update device.", LOG_ERROR);
+			if (!database_add_device_info(&st_devs.db, dev, dev->up_time))
+					log_local("Can not add info of device.", LOG_ERROR);
 			
 			strcpy(tg_msg, "New%20Issue%0ADevice:%20");
 			strcat(tg_msg, dev->name);

@@ -54,6 +54,8 @@ struct dev_list *database_get_devices(struct database *restrict db);
  */
 bool database_update_device(struct database *restrict db, struct device *restrict upd_dev);
 
+bool database_add_device_info(struct database *restrict db, struct device *restrict dev, const char *time);
+
 /*
  * Closing connection
  */
