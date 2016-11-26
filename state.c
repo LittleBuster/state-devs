@@ -32,7 +32,7 @@ static int ping(char *ipaddr)
 	char *command = NULL;
 	FILE *fp;
 	int stat = 0;
-	if (!asprintf (&command, "%s %s -q 2>&1", "fping", ipaddr))
+	if (!asprintf (&command, "%s %s -c 1 -q 2>&1", "fping", ipaddr))
 		return -1;
 	fp = popen(command, "r");
 	if (fp == NULL) {
