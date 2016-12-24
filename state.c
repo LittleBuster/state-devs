@@ -50,6 +50,7 @@ static void state_handle(void)
 	struct dev_list *dlist;
 	struct db_cfg *dbc = (struct db_cfg *)configs_get_db();
 	struct tg_cfg *tg = (struct tg_cfg *)configs_get_tg();
+	struct tg_cfg *tg2 = (struct tg_cfg *)configs_get_tg2();
 
 	if (!database_connect(&st_devs.db, dbc->ip, dbc->user, dbc->passwd, dbc->base)) {
 		log_local("Can not connect to database.", LOG_ERROR);
@@ -92,6 +93,8 @@ static void state_handle(void)
 				strcat(tg_msg, "%0AIssue:%20Device%20is%20DOWN.");
 				if (!telegram_send(tg->key, tg->id, tg_msg))
 					log_local("Can not send telegram message", LOG_ERROR);
+				if (!telegram_send(tg2->key, tg2->id, tg_msg))
+					log_local("Can not send telegram message", LOG_ERROR);
 				log_state(dev, false);				
 			}
 			continue;
@@ -108,7 +111,7 @@ static void state_handle(void)
 			if (!database_update_device(&st_devs.db, dev))
 				log_local("Can not update device.", LOG_ERROR);
 			if (!database_add_device_info(&st_devs.db, dev, dev->up_time))
-					log_local("Can not add info of device.", LOG_ERROR);
+				log_local("Can not add info of device.", LOG_ERROR);
 			
 			strcpy(tg_msg, "New%20Issue%0ADevice:%20");
 			strcat(tg_msg, dev->name);
@@ -118,6 +121,8 @@ static void state_handle(void)
 			strcat(tg_msg, dev->up_time);
 			strcat(tg_msg, "%0AIssue:%20Device%20is%20UP.");
 			if (!telegram_send(tg->key, tg->id, tg_msg))
+				log_local("Can not send telegram message", LOG_ERROR);
+			if (!telegram_send(tg2->key, tg2->id, tg_msg))
 				log_local("Can not send telegram message", LOG_ERROR);
 			log_state(dev, true);	
 		}

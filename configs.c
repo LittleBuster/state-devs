@@ -25,6 +25,7 @@ static struct {
     struct state_cfg state;
     struct db_cfg dbc;
     struct tg_cfg tg;
+    struct tg_cfg tg2;
 } cfg;
 
 
@@ -169,6 +170,15 @@ uint8_t configs_load(const char *filename)
         fclose(file);
         return CFG_TG_KEY_ERR;
     }
+	if (!configs_read_unsigned(file, &cfg.tg2.id)) {
+        fclose(file);
+        return CFG_TG_ID_ERR;
+    }
+    if (!configs_read_string(file, cfg.tg2.key, 254)) {
+        fclose(file);
+        return CFG_TG_KEY_ERR;
+    }
+
     fclose(file);
     return CFG_OK;
 }
@@ -186,4 +196,9 @@ struct db_cfg *configs_get_db(void)
 struct tg_cfg *configs_get_tg(void)
 {
 	return &cfg.tg;
+}
+
+struct tg_cfg *configs_get_tg2(void)
+{
+	return &cfg.tg2;
 }

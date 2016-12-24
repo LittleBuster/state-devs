@@ -70,5 +70,10 @@ struct tg_cfg {
 */
 struct tg_cfg *configs_get_tg(void);
 
+/*
+ * Telegram configs2
+*/
+struct tg_cfg *configs_get_tg2(void);
+
 
 #endif
